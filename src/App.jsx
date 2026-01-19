@@ -186,6 +186,7 @@ function App() {
   const [activeProgress, setActiveProgress] = useState(projectProgress[0])
   const [formState, setFormState] = useState(initialForm)
   const [submitted, setSubmitted] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const filteredProjects = useMemo(() => {
     if (activeFilter === 'All') {
@@ -216,7 +217,18 @@ function App() {
               <p className="brand-tag">Addis Ababa, Ethiopia</p>
             </div>
           </div>
-          <div className="nav-links">
+          <button
+            className="nav-toggle"
+            type="button"
+            aria-label="Toggle navigation"
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+          <div className={`nav-links${isMenuOpen ? ' is-open' : ''}`}>
             <a href="#about">About</a>
             <a href="#services">Services</a>
             <a href="#projects">Projects</a>
