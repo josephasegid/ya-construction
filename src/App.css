@@ -111,13 +111,29 @@
 .brand-mark {
   width: 48px;
   height: 48px;
-  border-radius: 16px;
+  border-radius: 50%;
   background: var(--black);
   color: #fff;
   display: grid;
   place-items: center;
   font-weight: 700;
   letter-spacing: 0.12em;
+  position: relative;
+  overflow: hidden;
+  animation: logoBreathe 3.6s ease-in-out infinite;
+}
+
+.brand-mark::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-bottom: none;
+  border-right: none;
+  top: 8px;
+  left: 8px;
+  transform: rotate(45deg);
 }
 
 .brand-name {
@@ -125,6 +141,21 @@
   font-size: 1.5rem;
   letter-spacing: 0.08em;
   margin: 0;
+}
+
+.brand-amharic {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.brand-amharic-highlight {
+  color: var(--orange);
+  font-size: 1.35rem;
+  font-weight: 600;
 }
 
 .brand-tag {
@@ -169,14 +200,15 @@
   background: #fff;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   padding: 0;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  flex-direction: column;
 }
 
 .nav-toggle span {
-  width: 20px;
-  height: 2px;
+  width: 22px;
+  height: 3px;
   background: var(--black);
   display: block;
   transition: transform 0.2s ease, opacity 0.2s ease;
@@ -188,7 +220,7 @@
 }
 
 .nav-toggle[aria-expanded='true'] span:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);
+  transform: translateY(7px) rotate(45deg);
 }
 
 .nav-toggle[aria-expanded='true'] span:nth-child(2) {
@@ -196,7 +228,7 @@
 }
 
 .nav-toggle[aria-expanded='true'] span:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 .hero-content {
@@ -267,6 +299,16 @@ button:hover {
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: 0.8rem 1.6rem;
+  font-size: 0.95rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cta-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
 .hero-metrics {
@@ -399,6 +441,76 @@ button:hover {
   gap: 1.6rem;
 }
 
+.team {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: max-height 0.5s ease, opacity 0.4s ease, padding 0.4s ease;
+}
+
+.team.is-open {
+  max-height: 900px;
+  opacity: 1;
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+}
+
+.team-slider {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(240px, 1fr);
+  gap: 1.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.8rem;
+  scroll-snap-type: x mandatory;
+}
+
+.team-card {
+  background: #fff;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  scroll-snap-align: start;
+  display: grid;
+}
+
+.team-photo {
+  padding: 1.6rem 1.6rem 0;
+  display: grid;
+  justify-items: center;
+}
+
+.team-photo img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.team-body {
+  padding: 1.4rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.team-role {
+  margin: 0;
+  color: var(--orange-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+}
+
+.team-bio {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .highlight-card {
   border: 1px solid var(--line);
   padding: 1.8rem;
@@ -477,6 +589,15 @@ button:hover {
 
 .service-card p {
   color: var(--muted);
+}
+
+.service-extra {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  border-top: 1px solid var(--line);
+  padding-top: 0.8rem;
 }
 
 .text-button {
@@ -777,6 +898,16 @@ button:hover {
   }
 }
 
+@keyframes logoBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
 @media (max-width: 1100px) {
   .hero-content,
   .split,
@@ -855,6 +986,7 @@ button:hover {
   }
 
   .highlights,
+  .team-slider,
   .service-grid,
   .project-grid,
   .news-grid,

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import siteBuildOne from './assets/images.jpg'
 import siteBuildTwo from './assets/images (1).jpg'
 import siteBuildThree from './assets/images (2).jpg'
@@ -14,21 +14,29 @@ const services = [
     title: 'Design-Build',
     description:
       'Integrated planning and construction for faster delivery, tighter budgets, and clear accountability.',
+    details:
+      'Includes feasibility studies, budgeting, permitting, and single-team delivery from concept to handover.',
   },
   {
     title: 'General Contracting',
     description:
       'Certified supervision, procurement, and site coordination for complex builds across Addis Ababa.',
+    details:
+      'We manage subcontractors, site safety, procurement, and quality assurance with daily reporting.',
   },
   {
     title: 'Renovation + Retrofit',
     description:
       'Smart upgrades for offices, retail, and residential spaces with minimal downtime.',
+    details:
+      'Phased work plans keep your operations running while upgrading systems, finishes, and layouts.',
   },
   {
     title: 'Civil Infrastructure',
     description:
       'Roads, drainage, and site prep handled with safety-first process control.',
+    details:
+      'Drainage, roadworks, grading, and utilities delivered with compliance to city standards.',
   },
 ]
 
@@ -109,6 +117,12 @@ const projectProgress = [
 
 const news = [
   {
+    title: 'Ethiopian raw materials strengthen local build quality',
+    date: 'Sep 02, 2026',
+    excerpt:
+      'Local sourcing of cement, aggregates, and steel continues to improve quality control and reduce delivery timelines.',
+  },
+  {
     title: 'Addis Ababa launches new urban renewal incentives',
     date: 'Aug 16, 2026',
     excerpt:
@@ -150,6 +164,27 @@ const certifications = [
   'Certified Project Managers',
 ]
 
+const teamMembers = [
+  {
+    name: 'Eyerusalem',
+    role: 'Project Director',
+    bio: 'Leads multi-site delivery and stakeholder coordination across Addis Ababa.',
+    image: '/assets/teams/Eyerusalem.JPG',
+  },
+  {
+    name: 'Yohannes',
+    role: 'Lead Architect',
+    bio: 'Designs resilient structures and oversees planning approvals.',
+    image: '/assets/teams/Yohannes .JPG',
+  },
+  {
+    name: 'Dawit Girma',
+    role: 'Site Operations Manager',
+    bio: 'Runs on-site logistics, safety protocols, and subcontractor teams.',
+    image: siteBuildOne,
+  },
+]
+
 const projectSites = [
   {
     name: 'Bole Urban Core',
@@ -187,6 +222,15 @@ function App() {
   const [formState, setFormState] = useState(initialForm)
   const [submitted, setSubmitted] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isTeamOpen, setIsTeamOpen] = useState(false)
+  const [metrics, setMetrics] = useState({
+    delivered: 0,
+    activeSites: 0,
+    years: 0,
+  })
+  const [expandedService, setExpandedService] = useState(null)
+  const metricsRef = useRef(null)
+  const hasCountedRef = useRef(false)
 
   const filteredProjects = useMemo(() => {
     if (activeFilter === 'All') {
@@ -206,6 +250,56 @@ function App() {
     setFormState(initialForm)
   }
 
+  const handleTeamToggle = () => {
+    setIsTeamOpen((prev) => !prev)
+    const target = document.getElementById('team')
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  useEffect(() => {
+    const target = { delivered: 120, activeSites: 35, years: 18 }
+    const duration = 1200
+
+    const runCount = () => {
+      if (hasCountedRef.current) return
+      hasCountedRef.current = true
+      const start = performance.now()
+
+      const step = (now) => {
+        const progress = Math.min((now - start) / duration, 1)
+        setMetrics({
+          delivered: Math.round(target.delivered * progress),
+          activeSites: Math.round(target.activeSites * progress),
+          years: Math.round(target.years * progress),
+        })
+        if (progress < 1) {
+          requestAnimationFrame(step)
+        }
+      }
+
+      requestAnimationFrame(step)
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            runCount()
+          }
+        })
+      },
+      { threshold: 0.4 }
+    )
+
+    if (metricsRef.current) {
+      observer.observe(metricsRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <div className="page">
       <header className="hero" id="home">
@@ -213,7 +307,9 @@ function App() {
           <div className="brand">
             <span className="brand-mark">YA</span>
             <div>
-              <p className="brand-name">YA Construction</p>
+              <p className="brand-name">
+                YA Construction <span className="brand-amharic"><span className="brand-amharic-highlight">ኑ</span> አብረን እንገንባ!</span>
+              </p>
               <p className="brand-tag">Addis Ababa, Ethiopia</p>
             </div>
           </div>
@@ -236,9 +332,9 @@ function App() {
             <a href="#news">News</a>
             <a href="#contact">Contact</a>
           </div>
-          <button className="nav-cta" type="button">
+          <a className="nav-cta cta-link" href="#contact">
             Request a Quote
-          </button>
+          </a>
         </nav>
 
         <div className="hero-banner">
@@ -265,24 +361,24 @@ function App() {
               your vision from ground to skyline.
             </p>
             <div className="hero-actions">
-              <button className="primary" type="button">
+              <a className="primary cta-link" href="#projects">
                 Explore projects
-              </button>
-              <button className="ghost" type="button">
+              </a>
+              <button className="ghost" type="button" onClick={handleTeamToggle}>
                 Meet the team
               </button>
             </div>
-            <div className="hero-metrics">
+            <div className="hero-metrics" ref={metricsRef}>
               <div>
-                <p className="metric-value">120+</p>
+                <p className="metric-value">{metrics.delivered}+</p>
                 <p className="metric-label">Projects delivered</p>
               </div>
               <div>
-                <p className="metric-value">35</p>
+                <p className="metric-value">{metrics.activeSites}</p>
                 <p className="metric-label">Active sites</p>
               </div>
               <div>
-                <p className="metric-value">18</p>
+                <p className="metric-value">{metrics.years}</p>
                 <p className="metric-label">Years in Addis</p>
               </div>
             </div>
@@ -327,6 +423,33 @@ function App() {
           <div className="highlight-card">
             <h3>Transparent cost control</h3>
             <p>Weekly budget tracking, scope reviews, and procurement support.</p>
+          </div>
+        </section>
+
+        <section
+          className={`section team ${isTeamOpen ? 'is-open' : ''}`}
+          id="team"
+        >
+          <div className="section-head">
+            <h2>Meet the team</h2>
+            <p>
+              Leadership and on-site experts who deliver projects with safety,
+              speed, and clarity.
+            </p>
+          </div>
+          <div className="team-slider">
+            {teamMembers.map((member) => (
+              <article className="team-card" key={member.name}>
+                <div className="team-photo">
+                  <img src={member.image} alt={member.name} />
+                </div>
+                <div className="team-body">
+                  <h3>{member.name}</h3>
+                  <p className="team-role">{member.role}</p>
+                  <p className="team-bio">{member.bio}</p>
+                </div>
+              </article>
+            ))}
           </div>
         </section>
 
@@ -386,9 +509,20 @@ function App() {
               <article className="service-card" key={service.title}>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
-                <button className="text-button" type="button">
-                  Learn more
+                <button
+                  className="text-button"
+                  type="button"
+                  onClick={() =>
+                    setExpandedService((prev) =>
+                      prev === service.title ? null : service.title
+                    )
+                  }
+                >
+                  {expandedService === service.title ? 'Show less' : 'Learn more'}
                 </button>
+                {expandedService === service.title && (
+                  <p className="service-extra">{service.details}</p>
+                )}
               </article>
             ))}
           </div>
@@ -641,7 +775,9 @@ function App() {
 
       <footer className="footer">
         <div>
-          <p className="brand-name">YA Construction</p>
+          <p className="brand-name">
+            YA Construction <span className="brand-amharic"><span className="brand-amharic-highlight">ኑ</span> አብረን እንገንባ!</span>
+          </p>
           <p className="brand-tag">Addis Ababa, Ethiopia</p>
           <p className="footer-contact">+251 911 234 567</p>
           <p className="footer-contact">hello@yaconstruction.et</p>
