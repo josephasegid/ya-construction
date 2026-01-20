@@ -172,12 +172,6 @@ const teamMembers = [
     image: '/assets/teams/Eyerusalem.JPG',
   },
   {
-    name: 'Yohannes',
-    role: 'Lead Architect',
-    bio: 'Designs resilient structures and oversees planning approvals.',
-    image: '/assets/teams/Yohannes .JPG',
-  },
-  {
     name: 'Dawit Girma',
     role: 'Site Operations Manager',
     bio: 'Runs on-site logistics, safety protocols, and subcontractor teams.',
@@ -222,7 +216,7 @@ function App() {
   const [formState, setFormState] = useState(initialForm)
   const [submitted, setSubmitted] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isTeamOpen, setIsTeamOpen] = useState(false)
+  const [isTeamOpen, setIsTeamOpen] = useState(true)
   const [metrics, setMetrics] = useState({
     delivered: 0,
     activeSites: 0,
@@ -300,12 +294,39 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll('.reveal-on-scroll'))
+    if (!elements.length) return undefined
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -10% 0px' }
+    )
+
+    elements.forEach((element) => observer.observe(element))
+
+    return () => observer.disconnect()
+  }, [activeFilter, isTeamOpen])
+
   return (
     <div className="page">
       <header className="hero" id="home">
         <nav className="nav">
           <div className="brand">
-            <span className="brand-mark">YA</span>
+            <span className="brand-mark">
+              <img
+                className="brand-logo"
+                src="/assets/yalogo.jpg"
+                alt="YA Construction logo"
+              />
+            </span>
             <div>
               <p className="brand-name">
                 YA Construction <span className="brand-amharic"><span className="brand-amharic-highlight">ኑ</span> አብረን እንገንባ!</span>
@@ -412,15 +433,15 @@ function App() {
 
       <main>
         <section className="section highlights">
-          <div className="highlight-card">
+          <div className="highlight-card reveal-on-scroll">
             <h3>Fast, safe delivery</h3>
             <p>Daily reporting and safety-first planning across every site.</p>
           </div>
-          <div className="highlight-card">
+          <div className="highlight-card reveal-on-scroll" style={{ '--reveal-delay': '120ms' }}>
             <h3>Local expertise</h3>
             <p>Deep experience in Addis Ababa permitting and logistics.</p>
           </div>
-          <div className="highlight-card">
+          <div className="highlight-card reveal-on-scroll" style={{ '--reveal-delay': '240ms' }}>
             <h3>Transparent cost control</h3>
             <p>Weekly budget tracking, scope reviews, and procurement support.</p>
           </div>
@@ -430,7 +451,7 @@ function App() {
           className={`section team ${isTeamOpen ? 'is-open' : ''}`}
           id="team"
         >
-          <div className="section-head">
+          <div className="section-head reveal-on-scroll">
             <h2>Meet the team</h2>
             <p>
               Leadership and on-site experts who deliver projects with safety,
@@ -438,8 +459,12 @@ function App() {
             </p>
           </div>
           <div className="team-slider">
-            {teamMembers.map((member) => (
-              <article className="team-card" key={member.name}>
+            {teamMembers.map((member, index) => (
+              <article
+                className="team-card reveal-on-scroll"
+                style={{ '--reveal-delay': `${index * 120}ms` }}
+                key={member.name}
+              >
                 <div className="team-photo">
                   <img src={member.image} alt={member.name} />
                 </div>
@@ -454,7 +479,7 @@ function App() {
         </section>
 
         <section className="section split" id="about">
-          <div>
+          <div className="reveal-on-scroll">
             <h2>About YA Construction</h2>
             <p>
               Built in Addis Ababa, YA Construction is a full-service contractor
@@ -481,7 +506,7 @@ function App() {
               </div>
             </div>
           </div>
-          <div className="about-card">
+          <div className="about-card reveal-on-scroll" style={{ '--reveal-delay': '160ms' }}>
             <p className="eyebrow">Trust signals</p>
             <h3>Certified. Insured. Ready.</h3>
             <ul className="trust-list">
@@ -498,15 +523,19 @@ function App() {
         </section>
 
         <section className="section muted" id="services">
-          <div className="section-head">
+          <div className="section-head reveal-on-scroll">
             <h2>Services</h2>
             <p>
               End-to-end construction support from feasibility through handover.
             </p>
           </div>
           <div className="service-grid">
-            {services.map((service) => (
-              <article className="service-card" key={service.title}>
+            {services.map((service, index) => (
+              <article
+                className="service-card reveal-on-scroll"
+                style={{ '--reveal-delay': `${index * 120}ms` }}
+                key={service.title}
+              >
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
                 <button
@@ -529,7 +558,7 @@ function App() {
         </section>
 
         <section className="section" id="projects">
-          <div className="section-head">
+          <div className="section-head reveal-on-scroll">
             <h2>Portfolio + Projects</h2>
             <p>
               High-impact builds across Addis Ababa, from mixed-use towers to
@@ -551,8 +580,12 @@ function App() {
             </div>
           </div>
           <div className="project-grid">
-            {filteredProjects.map((project) => (
-              <article className="project-card" key={project.name}>
+            {filteredProjects.map((project, index) => (
+              <article
+                className="project-card reveal-on-scroll"
+                style={{ '--reveal-delay': `${index * 120}ms` }}
+                key={project.name}
+              >
                 <img
                   className="project-image"
                   src={project.image}
@@ -575,7 +608,7 @@ function App() {
         </section>
 
         <section className="section muted" id="progress">
-          <div className="section-head">
+          <div className="section-head reveal-on-scroll">
             <h2>Project progress</h2>
             <p>
               Live updates from active sites with clear milestones, schedule
@@ -584,13 +617,14 @@ function App() {
           </div>
           <div className="progress-layout">
             <div className="progress-list">
-              {projectProgress.map((project) => (
+              {projectProgress.map((project, index) => (
                 <button
                   key={project.name}
-                  className={`progress-item${
+                  className={`progress-item reveal-on-scroll${
                     activeProgress.name === project.name ? ' is-active' : ''
                   }`}
                   type="button"
+                  style={{ '--reveal-delay': `${index * 120}ms` }}
                   onClick={() => setActiveProgress(project)}
                 >
                   <div>
@@ -601,7 +635,7 @@ function App() {
                 </button>
               ))}
             </div>
-            <div className="progress-card">
+            <div className="progress-card reveal-on-scroll" style={{ '--reveal-delay': '160ms' }}>
               <p className="eyebrow">Live status</p>
               <h3>{activeProgress.name}</h3>
               <p className="progress-detail">{activeProgress.phase}</p>
@@ -630,13 +664,17 @@ function App() {
         </section>
 
         <section className="section" id="sites">
-          <div className="section-head">
+          <div className="section-head reveal-on-scroll">
             <h2>Project sites</h2>
             <p>Current focus areas across Addis Ababa and surrounding districts.</p>
           </div>
           <div className="site-grid">
-            {projectSites.map((site) => (
-              <article className="site-card" key={site.name}>
+            {projectSites.map((site, index) => (
+              <article
+                className="site-card reveal-on-scroll"
+                style={{ '--reveal-delay': `${index * 120}ms` }}
+                key={site.name}
+              >
                 <h3>{site.name}</h3>
                 <p>{site.detail}</p>
                 <a
@@ -653,7 +691,7 @@ function App() {
         </section>
 
         <section className="section muted" id="news">
-          <div className="section-head">
+          <div className="section-head reveal-on-scroll">
             <h2>Construction news in Addis Ababa</h2>
             <p>
               Updates on permits, materials, and safety initiatives across the
@@ -661,8 +699,12 @@ function App() {
             </p>
           </div>
           <div className="news-grid">
-            {news.map((item) => (
-              <article className="news-card" key={item.title}>
+            {news.map((item, index) => (
+              <article
+                className="news-card reveal-on-scroll"
+                style={{ '--reveal-delay': `${index * 120}ms` }}
+                key={item.title}
+              >
                 <p className="news-date">{item.date}</p>
                 <h3>{item.title}</h3>
                 <p>{item.excerpt}</p>
@@ -675,15 +717,19 @@ function App() {
         </section>
 
         <section className="section split" id="testimonials">
-          <div>
+          <div className="reveal-on-scroll">
             <h2>Testimonials</h2>
             <p>
               Clients choose YA Construction for dependable schedules, clear
               communication, and high-end finishes.
             </p>
             <div className="testimonial-list">
-              {testimonials.map((item) => (
-                <blockquote key={item.name}>
+              {testimonials.map((item, index) => (
+                <blockquote
+                  className="reveal-on-scroll"
+                  style={{ '--reveal-delay': `${index * 120}ms` }}
+                  key={item.name}
+                >
                   <p>{item.quote}</p>
                   <footer>
                     {item.name}, {item.company}
@@ -692,7 +738,7 @@ function App() {
               ))}
             </div>
           </div>
-          <div className="cta-card">
+          <div className="cta-card reveal-on-scroll" style={{ '--reveal-delay': '160ms' }}>
             <p className="eyebrow">Ready to build?</p>
             <h3>Schedule a site visit this week.</h3>
             <p>
@@ -706,7 +752,7 @@ function App() {
         </section>
 
         <section className="section callout" id="contact">
-          <div>
+          <div className="reveal-on-scroll">
             <h2>Contact YA Construction</h2>
             <p>
               Tell us about your project. Our team will prepare a tailored
@@ -718,7 +764,7 @@ function App() {
               <p>Addis Ababa, Ethiopia</p>
             </div>
           </div>
-          <form className="contact-form" onSubmit={handleSubmit}>
+          <form className="contact-form reveal-on-scroll" style={{ '--reveal-delay': '160ms' }} onSubmit={handleSubmit}>
             <div className="form-grid">
               <input
                 type="text"

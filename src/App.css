@@ -109,8 +109,8 @@
 }
 
 .brand-mark {
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background: var(--black);
   color: #fff;
@@ -120,20 +120,19 @@
   letter-spacing: 0.12em;
   position: relative;
   overflow: hidden;
-  animation: logoBreathe 3.6s ease-in-out infinite;
+  animation: none;
 }
 
 .brand-mark::after {
-  content: '';
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-bottom: none;
-  border-right: none;
-  top: 8px;
-  left: 8px;
-  transform: rotate(45deg);
+  content: none;
+}
+
+.brand-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0;
+  display: block;
 }
 
 .brand-name {
@@ -887,6 +886,18 @@ button:hover {
   animation: fadeInUp 0.8s ease both;
 }
 
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px) scale(0.98);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -905,6 +916,14 @@ button:hover {
   }
   50% {
     transform: scale(1.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 
