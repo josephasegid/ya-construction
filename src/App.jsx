@@ -759,7 +759,7 @@ function App() {
               estimate, schedule, and scope of work.
             </p>
             <div className="contact-lines">
-              <p>Phone: +251 911 234 567</p>
+              <p>Phone: +251 923 439 165</p>
               <p>Email: hello@yaconstruction.et</p>
               <p>Addis Ababa, Ethiopia</p>
             </div>
@@ -825,7 +825,7 @@ function App() {
             YA Construction <span className="brand-amharic"><span className="brand-amharic-highlight">ኑ</span> አብረን እንገንባ!</span>
           </p>
           <p className="brand-tag">Addis Ababa, Ethiopia</p>
-          <p className="footer-contact">+251 911 234 567</p>
+          <p className="footer-contact">+251 923 439 165</p>
           <p className="footer-contact">hello@yaconstruction.et</p>
         </div>
         <div className="footer-links">
